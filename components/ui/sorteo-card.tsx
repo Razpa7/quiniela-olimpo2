@@ -32,14 +32,15 @@ export function SorteoCard({ nombre, hora, resultado, predicciones, estado }: So
       className={`${config?.bg ?? ''} border ${config?.border ?? ''} rounded-xl p-4 relative overflow-hidden`}
     >
       {/* Status badge */}
-      <div className={`absolute top-3 right-3 ${config?.badge ?? ''} px-2 py-1 rounded-full text-xs font-medium text-black`}>
-        {config?.text ?? ''}
-      </div>
-
-      {/* Header */}
-      <div className="flex items-center gap-2 mb-3">
-        <Clock className="w-4 h-4 text-gold" />
-        <span className="text-gold font-bold">{hora ?? '--:--'}</span>
+      {/* Header with Time and Status */}
+      <div className="flex justify-between items-start mb-3">
+        <div className="flex items-center gap-2">
+          <Clock className="w-4 h-4 text-gold" />
+          <span className="text-gold font-bold text-sm">{hora ?? '--:--'}</span>
+        </div>
+        <div className={`${config?.badge ?? ''} px-2 py-0.5 rounded-full text-[10px] font-bold text-black uppercase tracking-wider`}>
+          {config?.text ?? ''}
+        </div>
       </div>
       <h4 className="text-lg font-bold text-white mb-3 font-greek">{nombre ?? ''}</h4>
 
