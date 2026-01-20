@@ -3,10 +3,10 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { 
-  LayoutDashboard, 
-  History, 
-  Trophy, 
+import {
+  LayoutDashboard,
+  History,
+  Trophy,
   Settings,
   Sparkles,
   Zap
@@ -49,11 +49,10 @@ export function Sidebar() {
             <Link key={item?.href ?? ''} href={item?.href ?? '/'}>
               <motion.div
                 whileHover={{ x: 4 }}
-                className={`relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-                  isActive
+                className={`relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isActive
                     ? 'bg-gradient-to-r from-gold/20 to-electric/10 text-gold'
                     : 'text-gray-400 hover:text-white hover:bg-surface-light'
-                }`}
+                  }`}
               >
                 {isActive && (
                   <motion.div
@@ -73,7 +72,7 @@ export function Sidebar() {
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-gold/5 to-transparent" />
       <div className="absolute bottom-4 left-4 right-4">
         <div className="text-center text-xs text-gray-600">
-          <p className="font-greek">"La suerte favorece a los preparados"</p>
+          <p className="font-greek">&quot;La suerte favorece a los preparados&quot;</p>
           <p className="mt-1 text-gold/50">- El Oráculo del Olimpo</p>
         </div>
       </div>

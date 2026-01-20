@@ -3,6 +3,8 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from 'sonner';
 import './globals.css';
 
+import Script from 'next/script';
+
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
@@ -27,10 +29,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" className="dark" suppressHydrationWarning>
-      <head>
-        <script src="https://apps.abacus.ai/chatllm/appllm-lib.js" />
-      </head>
+      <head />
       <body className="bg-background text-foreground antialiased">
+        <Script src="https://apps.abacus.ai/chatllm/appllm-lib.js" strategy="afterInteractive" />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

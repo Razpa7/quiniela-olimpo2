@@ -21,7 +21,7 @@ async function main() {
         return;
     }
 
-    const uniqueDates = Array.from(new Set(results.map(r => r.fecha.toISOString().split('T')[0])));
+    const uniqueDates = Array.from(new Set(results.map((r: any) => r.fecha.toISOString().split('T')[0]))) as string[];
 
     const allPredictions = [];
     const allAciertos = [];
@@ -37,13 +37,16 @@ async function main() {
             const h20d = new Date(date);
             h20d.setDate(h20d.getDate() - 20);
 
-            const res48h = results.filter(r => r.tipoQuiniela === tipo && r.fecha <= date && r.fecha >= h48);
-            const lastRes = results.filter(r => r.tipoQuiniela === tipo && r.fecha < date).sort((a, b) => b.fecha.getTime() - a.fecha.getTime())[0];
-            const resNocturnos = results.filter(r => r.tipoQuiniela === tipo && r.sorteo === 'Nocturna' && r.fecha <= date && r.fecha >= h20d);
+            const currentDate = new Date(dateStr);
+            const currentResults = results.filter((r: any) => r.fecha.toISOString().split('T')[0] === dateStr && r.tipoQuiniela === tipo);
+            const prevResults = results.filter((r: any) => new Date(r.fecha) < currentDate && r.tipoQuiniela === tipo).sort((a: any, b: any) => b.fecha.getTime() - a.fecha.getTime());
+            const nocturnaResults = results.filter((r: any) => r.sorteo === 'Nocturna' && new Date(r.fecha) < currentDate && r.tipoQuiniela === tipo);
+            const lastRes = prevResults[0];
 
-            const zeus = motorZeus(res48h.map((r: any) => ({ primerPremio: r.primerPremio, fecha: r.fecha })));
+            // Engines
+            const zeus = motorZeus(prevResults.slice(0, 50).map((r: any) => ({ primerPremio: r.primerPremio, fecha: r.fecha })));
             const poseidon = motorPoseidon(lastRes ? { primerPremio: lastRes.primerPremio } : null);
-            const apolo = motorApolo(resNocturnos.map((r: any) => ({ primerPremio: r.primerPremio, fecha: r.fecha })), date);
+            const apolo = motorApolo(nocturnaResults.map((r: any) => ({ primerPremio: r.primerPremio, fecha: r.fecha })), date);
 
             const gods = [
                 { name: 'Zeus', num: zeus.num1 },
@@ -52,7 +55,7 @@ async function main() {
             ];
 
             for (const s of SORTEOS_CONFIG) {
-                const dayResult = results.find(r =>
+                const dayResult = results.find((r: any) =>
                     r.fecha.toISOString().split('T')[0] === dateStr &&
                     r.sorteo === s.nombre &&
                     r.tipoQuiniela === tipo
