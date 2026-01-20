@@ -5,6 +5,8 @@ const API_KEY = 'quiniela-master-key-2026';
 
 export interface DrawData {
   titulo: string;
+  fecha?: string;
+  estado?: string;
   a_la_cabeza: string;
   numeros: Array<{ posicion: string; numero: string }>;
 }
@@ -70,4 +72,18 @@ export function mapSorteoNameToKey(name: string): string {
     'Nocturna': 'Nocturna',
   };
   return mapping[name] ?? name;
+}
+
+export function parseDrawDate(titulo: string, defaultDate: Date): Date {
+  const match = titulo.match(/(\d{2})-(\d{2})/);
+  if (match) {
+    const day = parseInt(match[1]);
+    const month = parseInt(match[2]) - 1;
+    const date = new Date(defaultDate);
+    date.setDate(day);
+    date.setMonth(month);
+    date.setHours(0, 0, 0, 0);
+    return date;
+  }
+  return defaultDate;
 }

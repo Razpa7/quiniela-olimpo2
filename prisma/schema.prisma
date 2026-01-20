@@ -8,10 +8,29 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+enum DrawType {
+  Previa
+  Primera
+  Matutina
+  Vespertina
+  Nocturna
+}
+
+enum LotteryType {
+  Nacional
+  Provincia
+}
+
+enum GodType {
+  Zeus
+  Poseidon
+  Apolo
+}
+
 model ResultadoHistorico {
   id            BigInt   @id @default(autoincrement())
   fecha         DateTime @db.Date @map("date")
-  sorteo        String   @map("draw_type")
+  sorteo        String   @map("draw_type") // Keeping String for compatibility, but could migrate to DrawType
   tipoQuiniela  String   @map("location")
   primerPremio  String   @map("number")
   ultimoDos     String   @map("last_two")
@@ -47,4 +66,14 @@ model Acierto {
   createdAt       DateTime? @default(now()) @map("created_at")
 
   @@map("aciertos")
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("push_subscriptions")
 }

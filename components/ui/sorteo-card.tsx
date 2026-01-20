@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Clock, Trophy, Zap, Waves, Music } from 'lucide-react';
+import { Clock, Trophy, Zap, Waves, Music, CheckCircle } from 'lucide-react';
 
 interface SorteoCardProps {
   nombre: string;
@@ -57,39 +57,20 @@ export function SorteoCard({ nombre, hora, resultado, predicciones, estado }: So
         </div>
       )}
 
-      {/* Predictions */}
-      {predicciones && (
-        <div className="space-y-2 mt-4">
-          <div className="text-xs text-gray-500 mb-2">Predicciones</div>
-
-          <div className="flex items-center justify-between text-sm">
-            <div className="flex items-center gap-1">
-              <Zap className="w-3 h-3 text-yellow-400" />
-              <span className="text-yellow-400">Zeus</span>
-            </div>
-            <span className="font-mono text-white">
-              {predicciones?.zeus?.num1 ?? '00'}
-            </span>
-          </div>
-
-          <div className="flex items-center justify-between text-sm">
-            <div className="flex items-center gap-1">
-              <Waves className="w-3 h-3 text-cyan-400" />
-              <span className="text-cyan-400">Poseidón</span>
-            </div>
-            <span className="font-mono text-white">
-              {predicciones?.poseidon?.num1 ?? '00'}
-            </span>
-          </div>
-
-          <div className="flex items-center justify-between text-sm">
-            <div className="flex items-center gap-1">
-              <Music className="w-3 h-3 text-purple-400" />
-              <span className="text-purple-400">Apolo</span>
-            </div>
-            <span className="font-mono text-white">
-              {predicciones?.apolo?.num1 ?? '00'}
-            </span>
+      {/* Hits indicator */}
+      {estado === 'finalizado' && resultado && predicciones && (
+        <div className="mt-4 pt-3 border-t border-white/5">
+          <div className="flex flex-wrap gap-2">
+            {(Object.entries(predicciones) as [string, { num1: string }][]).map(([god, pred]) => {
+              const isHit = resultado.slice(-2) === pred.num1;
+              if (!isHit) return null;
+              return (
+                <div key={god} className="flex items-center gap-1 bg-green-500/20 text-green-400 px-2 py-1 rounded-lg text-[9px] font-bold border border-green-500/30">
+                  <CheckCircle className="w-3 h-3" />
+                  ACIERTO {god.toUpperCase()}
+                </div>
+              );
+            })}
           </div>
         </div>
       )}

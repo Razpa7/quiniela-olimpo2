@@ -7,9 +7,10 @@ import { SORTEOS_CONFIG } from '@/lib/types';
 
 interface CountdownProps {
   onSorteoInminente?: (sorteo: string) => void;
+  variant?: 'default' | 'compact';
 }
 
-export function Countdown({ onSorteoInminente }: CountdownProps) {
+export function Countdown({ onSorteoInminente, variant = 'default' }: CountdownProps) {
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
   const [nextSorteo, setNextSorteo] = useState<string>('');
   const [mounted, setMounted] = useState(false);
@@ -41,26 +42,23 @@ export function Countdown({ onSorteoInminente }: CountdownProps) {
             seconds: diffSeconds === 60 ? 0 : diffSeconds,
           });
 
-          // Notify 15 minutes before
           if (diffMinutes <= 15 && diffMinutes > 14) {
             onSorteoInminente?.(sorteo?.nombre ?? '');
           }
-
           return;
         }
       }
 
-      // If all sorteos passed, show next day's La Previa
       const tomorrow = new Date(now);
       tomorrow.setDate(tomorrow.getDate() + 1);
       tomorrow.setHours(10, 15, 0, 0);
-      
+
       const diff = tomorrow.getTime() - now.getTime();
       const h = Math.floor(diff / (1000 * 60 * 60));
       const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const s = Math.floor((diff % (1000 * 60)) / 1000);
 
-      setNextSorteo('La Previa (mañana)');
+      setNextSorteo('La Previa (Mañana)');
       setTimeLeft({ hours: h, minutes: m, seconds: s });
     };
 
@@ -69,22 +67,12 @@ export function Countdown({ onSorteoInminente }: CountdownProps) {
     return () => clearInterval(interval);
   }, [mounted, onSorteoInminente]);
 
-  if (!mounted) {
-    return (
-      <div className="glass rounded-2xl p-6 text-center">
-        <div className="flex items-center justify-center gap-2 mb-4">
-          <Clock className="w-5 h-5 text-gold" />
-          <span className="text-gray-400">Próximo Sorteo</span>
-        </div>
-        <div className="flex justify-center gap-3">
-          {[0, 0, 0].map((_, i) => (
-            <div key={i} className="countdown-digit rounded-xl p-4 min-w-[70px]">
-              <span className="text-3xl font-bold font-mono text-gold">--</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
+  if (!mounted) return <span>--:--:--</span>;
+
+  const timeString = `${String(timeLeft.hours).padStart(2, '0')}:${String(timeLeft.minutes).padStart(2, '0')}:${String(timeLeft.seconds).padStart(2, '0')}`;
+
+  if (variant === 'compact') {
+    return <span>{timeString}</span>;
   }
 
   const isUrgent = timeLeft.hours === 0 && timeLeft.minutes < 15;
@@ -93,24 +81,24 @@ export function Countdown({ onSorteoInminente }: CountdownProps) {
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className={`glass rounded-2xl p-6 text-center ${isUrgent ? 'border-2 border-gold animate-pulse' : ''}`}
+      className={`glass rounded-2xl p-6 text-center ${isUrgent ? 'border-2 border-amber-500 animate-pulse' : ''}`}
     >
       <div className="flex items-center justify-center gap-2 mb-2">
         {isUrgent ? (
-          <AlertCircle className="w-5 h-5 text-gold animate-bounce" />
+          <AlertCircle className="w-5 h-5 text-amber-500 animate-bounce" />
         ) : (
-          <Clock className="w-5 h-5 text-gold" />
+          <Clock className="w-5 h-5 text-amber-500" />
         )}
-        <span className="text-gray-400">Próximo Sorteo</span>
+        <span className="text-gray-400 text-xs font-bold uppercase tracking-widest">Próximo Sorteo</span>
       </div>
-      
-      <h3 className="text-xl font-bold text-gold mb-4 font-greek">{nextSorteo}</h3>
-      
+
+      <h3 className="text-xl font-bold text-white mb-4 cinzel-font">{nextSorteo}</h3>
+
       <div className="flex justify-center gap-3">
         <TimeUnit value={timeLeft.hours} label="Horas" />
-        <span className="text-3xl font-bold text-gold self-center">:</span>
+        <span className="text-3xl font-bold text-amber-500 self-center">:</span>
         <TimeUnit value={timeLeft.minutes} label="Min" />
-        <span className="text-3xl font-bold text-gold self-center">:</span>
+        <span className="text-3xl font-bold text-amber-500 self-center">:</span>
         <TimeUnit value={timeLeft.seconds} label="Seg" />
       </div>
     </motion.div>
@@ -119,16 +107,16 @@ export function Countdown({ onSorteoInminente }: CountdownProps) {
 
 function TimeUnit({ value, label }: { value: number; label: string }) {
   return (
-    <div className="countdown-digit rounded-xl p-4 min-w-[70px]">
+    <div className="bg-black/20 rounded-xl p-3 min-w-[60px] border border-white/5">
       <motion.span
         key={value}
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-3xl font-bold font-mono text-gold block"
+        className="text-2xl font-black font-mono text-white block"
       >
         {String(value ?? 0).padStart(2, '0')}
       </motion.span>
-      <span className="text-xs text-gray-500">{label}</span>
+      <span className="text-[9px] text-gray-500 uppercase font-bold">{label}</span>
     </div>
   );
 }

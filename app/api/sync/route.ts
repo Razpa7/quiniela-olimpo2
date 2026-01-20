@@ -1,12 +1,28 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/db';
-import { fetchLotteryResults, mapSorteoKeyToName } from '@/lib/api-client';
+import { fetchLotteryResults, mapSorteoKeyToName, parseDrawDate } from '@/lib/api-client';
 
 export const dynamic = 'force-dynamic';
 
+const CRON_SECRET = process.env.CRON_SECRET || 'cron-secret-123';
+
 // Sync results from API and verify predictions
-export async function POST() {
+export async function POST(req: NextRequest) {
   try {
+    // 1. Security Check
+    const authHeader = req.headers.get('authorization');
+    const url = new URL(req.url);
+    const queryKey = url.searchParams.get('key');
+
+    const isValid =
+      (authHeader === `Bearer ${CRON_SECRET}`) ||
+      (queryKey === CRON_SECRET) ||
+      (req.headers.get('x-api-key') === CRON_SECRET);
+
+    if (!isValid) {
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    }
+
     const apiResponse = await fetchLotteryResults();
 
     if (!apiResponse?.success || !apiResponse?.data) {
@@ -36,12 +52,15 @@ export async function POST() {
         const sorteoName = mapSorteoKeyToName(sorteoKey);
         const primerPremio = winningNumber.slice(-4);
 
+        // PARSE THE ACTUAL DATE FROM THE TITLE
+        const targetDate = parseDrawDate(drawData.titulo, hoy);
+
         try {
           // Save result
           await prisma.resultadoHistorico.upsert({
             where: {
               fecha_sorteo_tipoQuiniela: {
-                fecha: hoy,
+                fecha: targetDate,
                 sorteo: sorteoName,
                 tipoQuiniela: tipo,
               },
@@ -51,7 +70,7 @@ export async function POST() {
               ultimoDos: primerPremio.slice(-2)
             },
             create: {
-              fecha: hoy,
+              fecha: targetDate,
               sorteo: sorteoName,
               tipoQuiniela: tipo,
               primerPremio,
@@ -60,48 +79,50 @@ export async function POST() {
           });
           syncResults.saved++;
 
-          // Check for matches in the new prediction structure (one row per god)
-          const predicciones = await prisma.prediccion.findMany({
-            where: {
-              fecha: hoy,
-              sorteo: sorteoName,
-              tipoQuiniela: tipo,
-            },
-          });
+          // Only check predictions if the draw is from today
+          if (targetDate.getTime() === hoy.getTime()) {
+            const predicciones = await prisma.prediccion.findMany({
+              where: {
+                fecha: hoy,
+                sorteo: sorteoName,
+                tipoQuiniela: tipo,
+              },
+            });
 
-          if (predicciones && predicciones.length > 0) {
-            const terminacion = primerPremio.slice(-2);
+            if (predicciones && predicciones.length > 0) {
+              const terminacion = primerPremio.slice(-2);
 
-            for (const pred of predicciones) {
-              if (pred.predictedNumber === terminacion) {
-                // Register hit in 'aciertos' table
-                const existing = await prisma.acierto.findFirst({
-                  where: {
-                    fecha: hoy,
-                    sorteo: sorteoName,
-                    tipoQuiniela: tipo,
-                    diosGanador: pred.god,
-                  },
-                });
-
-                if (!existing) {
-                  const acierto = await prisma.acierto.create({
-                    data: {
+              for (const pred of predicciones) {
+                if (pred.predictedNumber === terminacion) {
+                  // Register hit in 'aciertos' table
+                  const existing = await prisma.acierto.findFirst({
+                    where: {
                       fecha: hoy,
                       sorteo: sorteoName,
                       tipoQuiniela: tipo,
                       diosGanador: pred.god,
-                      numeroAcertado: terminacion,
-                      numeroOficial: primerPremio,
                     },
                   });
-                  if (acierto) syncResults.aciertos.push(acierto);
 
-                  // Update prediction row as hit
-                  await prisma.prediccion.update({
-                    where: { id: pred.id },
-                    data: { isHit: true, actualNumber: primerPremio }
-                  });
+                  if (!existing) {
+                    const acierto = await prisma.acierto.create({
+                      data: {
+                        fecha: hoy,
+                        sorteo: sorteoName,
+                        tipoQuiniela: tipo,
+                        diosGanador: pred.god,
+                        numeroAcertado: terminacion,
+                        numeroOficial: primerPremio,
+                      },
+                    });
+                    if (acierto) syncResults.aciertos.push(acierto);
+
+                    // Update prediction row as hit
+                    await prisma.prediccion.update({
+                      where: { id: pred.id },
+                      data: { isHit: true, actualNumber: primerPremio }
+                    });
+                  }
                 }
               }
             }

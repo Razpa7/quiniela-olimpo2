@@ -35,7 +35,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" className="dark" suppressHydrationWarning>
-      <head />
+      <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+      </head>
       <body className="bg-background text-foreground antialiased">
         <Script src="https://apps.abacus.ai/chatllm/appllm-lib.js" strategy="afterInteractive" />
         <ThemeProvider

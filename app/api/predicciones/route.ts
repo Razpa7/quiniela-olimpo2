@@ -39,34 +39,44 @@ export async function GET(request: Request) {
       });
     }
 
-    // Get historical data for engines
+    // Get historical data for engines - EXCLUDE TODAY to avoid "cheating"
+    const hoyTimestamp = hoy.getTime();
     const hace48h = new Date();
     hace48h.setHours(hace48h.getHours() - 48);
 
     const hace20dias = new Date();
     hace20dias.setDate(hace20dias.getDate() - 20);
 
-    // Data for Zeus (last 48h)
+    // Data for Zeus (last 48h but BEFORE today)
     const resultados48h = await prisma?.resultadoHistorico?.findMany?.({
       where: {
         tipoQuiniela: tipo,
-        fecha: { gte: hace48h },
+        fecha: {
+          gte: hace48h,
+          lt: hoy // Exclude today
+        },
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { fecha: 'desc' },
     }) ?? [];
 
-    // Data for Poseidon (last result)
+    // Data for Poseidon (last result BEFORE today)
     const ultimoResultado = await prisma?.resultadoHistorico?.findFirst?.({
-      where: { tipoQuiniela: tipo },
-      orderBy: [{ fecha: 'desc' }, { createdAt: 'desc' }],
+      where: {
+        tipoQuiniela: tipo,
+        fecha: { lt: hoy }
+      },
+      orderBy: [{ fecha: 'desc' }, { sorteo: 'desc' }],
     });
 
-    // Data for Apolo (nocturna last 20 days)
+    // Data for Apolo (nocturna last 20 days BEFORE today)
     const resultadosNocturnos = await prisma?.resultadoHistorico?.findMany?.({
       where: {
         tipoQuiniela: tipo,
         sorteo: 'Nocturna',
-        fecha: { gte: hace20dias },
+        fecha: {
+          gte: hace20dias,
+          lt: hoy
+        },
       },
       orderBy: { fecha: 'desc' },
     }) ?? [];

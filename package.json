@@ -5,7 +5,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "scheduler": "ts-node scripts/scheduler.ts"
   },
   "prisma": {
     "seed": "tsx scripts/seed-history.ts"
@@ -69,8 +70,11 @@
     "@tanstack/react-query": "5.0.0",
     "@types/bcryptjs": "2.4.6",
     "@types/jsonwebtoken": "9.0.5",
+    "@types/node-cron": "^3.0.11",
+    "@types/node-fetch": "^2.6.13",
     "@types/plotly.js": "2.35.5",
     "@types/react-plotly.js": "2.6.3",
+    "@types/web-push": "^3.6.4",
     "autoprefixer": "10.4.15",
     "bcryptjs": "2.4.3",
     "chart.js": "4.4.9",
@@ -95,6 +99,8 @@
     "next": "14.2.28",
     "next-auth": "4.24.11",
     "next-themes": "0.3.0",
+    "node-cron": "^4.2.1",
+    "node-fetch": "^2.7.0",
     "plotly.js": "2.35.3",
     "react": "18.2.0",
     "react-chartjs-2": "5.3.0",
@@ -114,6 +120,7 @@
     "swr": "2.2.4",
     "tailwind-scrollbar-hide": "1.1.7",
     "vaul": "0.9.9",
+    "web-push": "^3.6.7",
     "webpack": "5.99.5",
     "yup": "1.3.0",
     "zod": "3.23.8",
