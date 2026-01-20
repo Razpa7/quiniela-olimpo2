@@ -20,6 +20,12 @@ export const metadata: Metadata = {
     description: 'Predicciones divinas para la Quiniela Argentina',
     images: ['/og-image.png'],
   },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+  },
 };
 
 export default function RootLayout({

@@ -185,57 +185,57 @@ export function DashboardClient() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="glass border border-gold/30 rounded-2xl p-6 mb-8 relative overflow-hidden"
+            className="glass border border-gold/30 rounded-2xl p-4 md:p-6 mb-6 relative overflow-hidden"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-gold/10 to-transparent pointer-events-none" />
             <div className="flex flex-col items-center text-center relative z-10">
-              <span className="text-xs font-bold text-gold tracking-widest uppercase mb-1">Tu Favorito de Hoy</span>
-              <div className="flex items-center gap-2 mb-4">
-                <TrophyIcon className="w-4 h-4 text-gold" />
-                <span className="text-white font-bold">{motores.zeus.nombre}</span>
+              <span className="text-[10px] md:text-xs font-bold text-gold tracking-widest uppercase mb-1">Tu Favorito de Hoy</span>
+              <div className="flex items-center gap-2 mb-3">
+                <TrophyIcon className="w-3 h-3 md:w-4 md:h-4 text-gold" />
+                <span className="text-white font-bold text-sm md:text-base">{motores.zeus.nombre}</span>
               </div>
 
-              <div className="w-24 h-24 bg-gradient-to-br from-yellow-500 to-amber-600 rounded-2xl flex items-center justify-center shadow-lg shadow-gold/20 mb-2">
-                <span className="text-5xl font-bold text-white font-mono">{motores.zeus.num1}</span>
+              <div className="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-br from-yellow-500 to-amber-600 rounded-2xl flex items-center justify-center shadow-lg shadow-gold/20 mb-2">
+                <span className="text-4xl md:text-5xl font-bold text-white font-mono">{motores.zeus.num1}</span>
               </div>
-              <p className="text-xs text-gray-400 mt-2 max-w-[200px] line-clamp-2">{motores.zeus.explicacion}</p>
+              <p className="text-[10px] md:text-xs text-gray-400 mt-2 max-w-[200px] line-clamp-2 leading-tight">{motores.zeus.explicacion}</p>
             </div>
           </motion.div>
         )}
 
         {/* Gods Row */}
         <div className="mb-8">
-          <div className="flex items-center gap-2 mb-4 px-1">
+          <div className="flex items-center gap-2 mb-3 px-1">
             <Sparkles className="w-4 h-4 text-electric" />
-            <h3 className="font-bold text-lg text-white">Los Tres Grandes</h3>
+            <h3 className="font-bold text-base md:text-lg text-white">Los Tres Grandes</h3>
           </div>
 
-          {/* Horizontal Scroll for Gods if on mobile, Grid on desktop */}
-          <div className="grid grid-cols-3 gap-3">
+          {/* Grid for Gods */}
+          <div className="grid grid-cols-3 gap-2 md:gap-3">
             {motores ? (
               <>
                 {/* Small God Cards */}
-                <div className="glass border border-yellow-500/30 bg-yellow-900/10 rounded-xl p-3 flex flex-col items-center text-center">
-                  <span className="text-[10px] text-yellow-400 font-bold uppercase mb-1">Zeus</span>
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-yellow-500 to-amber-600 flex items-center justify-center mb-1 shadow-sm">
-                    <span className="text-lg font-bold text-white font-mono">{motores.zeus.num1}</span>
+                <div className="glass border border-yellow-500/30 bg-yellow-900/10 rounded-xl p-2 md:p-3 flex flex-col items-center text-center">
+                  <span className="text-[9px] md:text-[10px] text-yellow-400 font-bold uppercase mb-1">Zeus</span>
+                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-gradient-to-br from-yellow-500 to-amber-600 flex items-center justify-center mb-1 shadow-sm">
+                    <span className="text-sm md:text-lg font-bold text-white font-mono">{motores.zeus.num1}</span>
                   </div>
                 </div>
-                <div className="glass border border-cyan-500/30 bg-cyan-900/10 rounded-xl p-3 flex flex-col items-center text-center">
-                  <span className="text-[10px] text-cyan-400 font-bold uppercase mb-1">Poseidón</span>
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center mb-1 shadow-sm">
-                    <span className="text-lg font-bold text-white font-mono">{motores.poseidon.num1}</span>
+                <div className="glass border border-cyan-500/30 bg-cyan-900/10 rounded-xl p-2 md:p-3 flex flex-col items-center text-center">
+                  <span className="text-[9px] md:text-[10px] text-cyan-400 font-bold uppercase mb-1">Poseidón</span>
+                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center mb-1 shadow-sm">
+                    <span className="text-sm md:text-lg font-bold text-white font-mono">{motores.poseidon.num1}</span>
                   </div>
                 </div>
-                <div className="glass border border-purple-500/30 bg-purple-900/10 rounded-xl p-3 flex flex-col items-center text-center">
-                  <span className="text-[10px] text-purple-400 font-bold uppercase mb-1">Apolo</span>
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center mb-1 shadow-sm">
-                    <span className="text-lg font-bold text-white font-mono">{motores.apolo.num1}</span>
+                <div className="glass border border-purple-500/30 bg-purple-900/10 rounded-xl p-2 md:p-3 flex flex-col items-center text-center">
+                  <span className="text-[9px] md:text-[10px] text-purple-400 font-bold uppercase mb-1">Apolo</span>
+                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center mb-1 shadow-sm">
+                    <span className="text-sm md:text-lg font-bold text-white font-mono">{motores.apolo.num1}</span>
                   </div>
                 </div>
               </>
             ) : (
-              [1, 2, 3].map(i => <div key={i} className="h-24 bg-surface/50 rounded-xl animate-pulse" />)
+              [1, 2, 3].map(i => <div key={i} className="h-20 bg-surface/50 rounded-xl animate-pulse" />)
             )}
           </div>
         </div>

@@ -22,7 +22,7 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 bg-gradient-to-b from-surface-dark via-surface to-surface-dark border-r border-border z-50">
+    <aside className="hidden md:block fixed left-0 top-0 h-screen w-64 bg-gradient-to-b from-surface-dark via-surface to-surface-dark border-r border-border z-50">
       {/* Logo */}
       <div className="p-6 border-b border-border">
         <Link href="/" className="flex items-center gap-3">
@@ -50,8 +50,8 @@ export function Sidebar() {
               <motion.div
                 whileHover={{ x: 4 }}
                 className={`relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isActive
-                    ? 'bg-gradient-to-r from-gold/20 to-electric/10 text-gold'
-                    : 'text-gray-400 hover:text-white hover:bg-surface-light'
+                  ? 'bg-gradient-to-r from-gold/20 to-electric/10 text-gold'
+                  : 'text-gray-400 hover:text-white hover:bg-surface-light'
                   }`}
               >
                 {isActive && (
