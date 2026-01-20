@@ -84,7 +84,7 @@ async function seedResults(data: any[], tipoQuiniela: string) {
   for (const row of data) {
     const fecha = new Date(row.fecha);
     fecha.setHours(12, 0, 0, 0); // Set to noon to avoid timezone issues
-    
+
     for (const [key, sorteoName] of Object.entries(sorteoMap)) {
       const premio = row[key];
       if (premio) {
@@ -97,12 +97,13 @@ async function seedResults(data: any[], tipoQuiniela: string) {
                 tipoQuiniela,
               },
             },
-            update: { primerPremio: premio },
+            update: { primerPremio: premio, ultimoDos: premio.slice(-2) },
             create: {
               fecha,
               sorteo: sorteoName,
               tipoQuiniela,
               primerPremio: premio,
+              ultimoDos: premio.slice(-2)
             },
           });
           console.log(`✓ ${tipoQuiniela} - ${row.fecha} - ${sorteoName}: ${premio}`);
@@ -116,13 +117,13 @@ async function seedResults(data: any[], tipoQuiniela: string) {
 
 async function main() {
   console.log('\n🏛️ Iniciando seed de datos históricos...\n');
-  
+
   console.log('\n🟢 Seeding Provincial data...');
   await seedResults(provincialData, 'Provincial');
-  
+
   console.log('\n🟡 Seeding Nacional data...');
   await seedResults(nacionalData, 'Nacional');
-  
+
   const count = await prisma.resultadoHistorico.count();
   console.log(`\n✅ Seed completado. Total de registros: ${count}`);
 }

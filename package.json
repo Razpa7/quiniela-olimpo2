@@ -3,10 +3,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "scheduler": "ts-node scripts/scheduler.ts"
+    "scheduler": "ts-node scripts/scheduler.ts",
+    "postinstall": "prisma generate"
   },
   "prisma": {
     "seed": "tsx scripts/seed-history.ts"
