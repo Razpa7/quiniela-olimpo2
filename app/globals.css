@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0a0e27;
+  --foreground: #ffffff;
+  --gold: #FFD700;
+  --electric: #00D4FF;
+}
+
+[data-hydration-error] {
+  display: none !important;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+.font-greek {
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0e27;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #FFD700, #00D4FF);
+  border-radius: 4px;
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(20, 26, 61, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+/* Glow effects */
+.glow-gold {
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+}
+
+.glow-electric {
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+}
+
+.glow-apolo {
+  box-shadow: 0 0 15px rgba(155, 89, 182, 0.3);
+}
+
+/* Text glow */
+.text-glow-gold {
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.text-glow-electric {
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+}
+
+/* Number cards */
+.number-card {
+  background: linear-gradient(135deg, #1e2650 0%, #141a3d 100%);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+}
+
+.number-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(135deg, #FFD700, #00D4FF);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* Countdown styling */
+.countdown-digit {
+  background: linear-gradient(180deg, #1e2650 0%, #0d1029 100%);
+  border: 1px solid #FFD700;
+}
+
+/* Toast custom */
+.toast-success {
+  background: linear-gradient(135deg, #141a3d 0%, #1e2650 100%) !important;
+  border: 1px solid #00D4FF !important;
+}
+
+.toast-warning {
+  background: linear-gradient(135deg, #141a3d 0%, #1e2650 100%) !important;
+  border: 1px solid #FFD700 !important;
+}
+
+/* Animations */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 215, 0, 0.1) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}

@@ -1,0 +1,50 @@
+generator client {
+    provider = "prisma-client-js"
+    binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model ResultadoHistorico {
+  id            BigInt   @id @default(autoincrement())
+  fecha         DateTime @db.Date @map("date")
+  sorteo        String   @map("draw_type")
+  tipoQuiniela  String   @map("location")
+  primerPremio  String   @map("number")
+  ultimoDos     String   @map("last_two")
+  createdAt     DateTime? @default(now()) @map("created_at")
+
+  @@unique([fecha, sorteo, tipoQuiniela])
+  @@map("results")
+}
+
+model Prediccion {
+  id              BigInt   @id @default(autoincrement())
+  fecha           DateTime @db.Date @map("date")
+  sorteo          String   @map("target_draw_type")
+  tipoQuiniela    String   @map("location")
+  god             String   @map("god")
+  predictedNumber String   @map("predicted_number")
+  actualNumber    String?  @map("actual_number")
+  isHit           Boolean  @default(false) @map("is_hit")
+  createdAt       DateTime? @default(now()) @map("created_at")
+
+  @@unique([fecha, sorteo, tipoQuiniela, god])
+  @@map("predictions")
+}
+
+model Acierto {
+  id              String   @id @default(cuid())
+  fecha           DateTime @db.Date @map("date")
+  sorteo          String   @map("target_draw_type")
+  tipoQuiniela    String   @map("location")
+  diosGanador     String   @map("god")
+  numeroAcertado  String   @map("predicted_number")
+  numeroOficial   String   @map("actual_number")
+  createdAt       DateTime? @default(now()) @map("created_at")
+
+  @@map("aciertos")
+}
